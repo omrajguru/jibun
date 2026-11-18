@@ -1,0 +1,9 @@
+import { cloudflare } from '@cloudflare/vite-plugin';
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  plugins: [react(), cloudflare()],
+  worker: { format: 'es' },
+  build: { chunkSizeWarningLimit: 1500 },
+});

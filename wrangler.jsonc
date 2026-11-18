@@ -1,0 +1,76 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "jibun",
+  "main": "src/worker/index.ts",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": [
+    "nodejs_compat",
+    "global_fetch_strictly_public"
+  ],
+  "workers_dev": true,
+  "preview_urls": false,
+  "assets": {
+    "not_found_handling": "single-page-application",
+    "run_worker_first": [
+      "/api/*",
+      "/oauth/*",
+      "/mcp",
+      "/mcp/*",
+      "/.well-known/*"
+    ]
+  },
+  "vars": {
+    "BETTER_AUTH_URL": "http://localhost:5173",
+    "S3_PREFIX": "jibun/"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "jibun",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "OAUTH_KV",
+      "id": "00000000000000000000000000000000"
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "PROJECT_ROOM",
+        "class_name": "ProjectRoom"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": [
+        "ProjectRoom"
+      ]
+    }
+  ],
+  "queues": {
+    "producers": [
+      {
+        "binding": "BUILD_QUEUE",
+        "queue": "jibun-builds"
+      }
+    ],
+    "consumers": [
+      {
+        "queue": "jibun-builds",
+        "max_batch_size": 1,
+        "max_batch_timeout": 1,
+        "max_retries": 3,
+        "dead_letter_queue": "jibun-builds-dlq"
+      }
+    ]
+  },
+  "observability": {
+    "enabled": true
+  }
+}

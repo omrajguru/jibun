@@ -1,0 +1,11 @@
+node_modules
+dist
+.wrangler
+.dev.vars
+*.tsbuildinfo
+tests/.out
+.DS_Store
+.dev.vars.*
+.env
+.env.*
+.claude/
